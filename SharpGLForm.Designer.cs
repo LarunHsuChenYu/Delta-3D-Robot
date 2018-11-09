@@ -109,6 +109,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl)).BeginInit();
             this.gbStepSize.SuspendLayout();
             this.gbJog.SuspendLayout();
@@ -134,7 +136,7 @@
             this.openGLControl.Location = new System.Drawing.Point(528, 12);
             this.openGLControl.Name = "openGLControl";
             this.openGLControl.RenderContextType = SharpGL.RenderContextType.FBO;
-            this.openGLControl.Size = new System.Drawing.Size(723, 339);
+            this.openGLControl.Size = new System.Drawing.Size(723, 377);
             this.openGLControl.TabIndex = 0;
             this.openGLControl.OpenGLInitialized += new System.EventHandler(this.openGLControl_OpenGLInitialized);
             this.openGLControl.OpenGLDraw += new System.Windows.Forms.PaintEventHandler(this.openGLControl_OpenGLDraw);
@@ -351,7 +353,6 @@
             this.lvGcodeDisplay.TabIndex = 239;
             this.lvGcodeDisplay.UseCompatibleStateImageBehavior = false;
             this.lvGcodeDisplay.View = System.Windows.Forms.View.Details;
-            this.lvGcodeDisplay.SelectedIndexChanged += new System.EventHandler(this.lvGcodeDisplay_SelectedIndexChanged);
             this.lvGcodeDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.openGLControl_MouseWheel);
             this.lvGcodeDisplay.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvGcodeDisplay_MouseUp);
             // 
@@ -474,7 +475,7 @@
             this.gbJog.Controls.Add(this.label19);
             this.gbJog.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbJog.ForeColor = System.Drawing.Color.Blue;
-            this.gbJog.Location = new System.Drawing.Point(684, 379);
+            this.gbJog.Location = new System.Drawing.Point(729, 395);
             this.gbJog.Name = "gbJog";
             this.gbJog.Size = new System.Drawing.Size(522, 231);
             this.gbJog.TabIndex = 225;
@@ -1031,7 +1032,7 @@
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(426, 330);
+            this.pictureBox1.Location = new System.Drawing.Point(426, 329);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(68, 68);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -1043,29 +1044,52 @@
             // 
             this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(426, 400);
+            this.pictureBox2.Location = new System.Drawing.Point(426, 477);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(68, 68);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox2.TabIndex = 245;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox3
             // 
             this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(426, 470);
+            this.pictureBox3.Location = new System.Drawing.Point(426, 403);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(68, 68);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox3.TabIndex = 246;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(426, 566);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(68, 23);
+            this.button1.TabIndex = 247;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(426, 594);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(68, 23);
+            this.button2.TabIndex = 248;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // SharpGLForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1263, 634);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
@@ -1206,6 +1230,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

@@ -15,7 +15,15 @@ namespace SharpGLWinformsApplication1
 {
     public partial class SharpGLForm : Form
     {
-        public vec3 vRotAngle, vDrawOriginal, vThiAng_1, vThiAng_2, vThiAng_3;
+        public vec3 vRotAngle, vDrawOriginal;
+        public static float fWorkMaxAngle = 81.92f;
+        public static float fWorkMinAngle = -37.18f;
+
+        public static float fWorkRadio = 250f;
+        public static float fWorkMaxZ = -371f;
+        public static float fWorkMinZ = -521f;
+
+        //public static float fWork
         public float fFovy = 75f;
         public vec3 MovePlatePos = new vec3(0, 0, -340.51800f);
         ListViewItem.ListViewSubItem SelectedLSI;               //Object when select List view Gcode
@@ -32,6 +40,7 @@ namespace SharpGLWinformsApplication1
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
+            vDrawOriginal = new vec3(-15, 5, -15);
             //initial list view Gcode
             InitialGcodeDispaly();
         }
@@ -53,7 +62,7 @@ namespace SharpGLWinformsApplication1
             gl.LoadIdentity();
 
             gl.Perspective(fFovy, (double)Width / (double)Height, 0.01, 400.0);
-            gl.LookAt(-15, -5, -15, 0, 0, 0, 0, 1, 0);
+            gl.LookAt(vDrawOriginal.x, vDrawOriginal.y, vDrawOriginal.z, 0, 0, 0, 0, 1, 0);
 
             gl.Rotate(vRotAngle.x, 1.0f, 0.0f, 0.0f);
             gl.Rotate(vRotAngle.y, 0.0f, 1.0f, 0.0f);
@@ -78,6 +87,14 @@ namespace SharpGLWinformsApplication1
             label12.Text = "Leg1 Theta 2 Ry: " + ThetaPassiveRy[0];
             label11.Text = "Leg2 Theta 2 Ry: " + ThetaPassiveRy[1];
             label10.Text = "Leg3 Theta 2 Ry: " + ThetaPassiveRy[2]; */
+            tbXCoor.Text = Math.Round(MovePlatePos.x, 4).ToString();
+            tbYCoor.Text = Math.Round(MovePlatePos.y, 4).ToString();
+            tbZCoor.Text = Math.Round(MovePlatePos.z, 4).ToString();
+            UpdateCoorRv();
+            tbθ1Coor.Text = Math.Round(ThetaMotor[0], 4).ToString();
+            tbθ2Coor.Text = Math.Round(ThetaMotor[1], 4).ToString();
+            tbθ3Coor.Text = Math.Round(ThetaMotor[2], 4).ToString();
+
         }
 
         private void openGLControl_OpenGLInitialized(object sender, EventArgs e)
@@ -93,33 +110,7 @@ namespace SharpGLWinformsApplication1
             gl.LoadIdentity();          
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
         }
-
     
-
-        //private void button3_Click(object sender, EventArgs e)
-        //{
-        //    int tmp = Convert.ToInt16(label1.Text);
-        //    label1.Text = add(tmp, 10).ToString();
-        //}
-
-        //private void button4_Click(object sender, EventArgs e)
-        //{
-        //    int tmp = Convert.ToInt16(label1.Text);
-        //    label1.Text = Sub(tmp, 10).ToString();
-        //}
-
-        //private void button5_Click(object sender, EventArgs e)
-        //{
-        //    int tmp = Convert.ToInt16(label1.Text);
-        //    label1.Text = mul(tmp, 10).ToString();
-        //}
-
-        //private void button6_Click(object sender, EventArgs e)
-        //{
-        //    int tmp = Convert.ToInt16(label1.Text);
-        //    label1.Text = div(tmp, 10).ToString();
-        //}
-
         //测试例子
         public void rtest(ref OpenGL gl)
         {
@@ -135,16 +126,16 @@ namespace SharpGLWinformsApplication1
             switch (e.KeyCode)
             {   
                 case Keys.NumPad6:
-                    vDrawOriginal.x += 50f;
+                    vDrawOriginal.x += 5f;
                     break;
                 case Keys.NumPad4:
-                    vDrawOriginal.x -= 50f;
+                    vDrawOriginal.x -= 5f;
                     break;
                 case Keys.NumPad2:
-                    vDrawOriginal.y -= 50f;
+                    vDrawOriginal.y -= 5f;
                     break;
                 case Keys.NumPad8:
-                    vDrawOriginal.y += 50f;
+                    vDrawOriginal.y += 5f;
                     break;
                 case Keys.Q:
                     vRotAngle.x += 5;
@@ -247,6 +238,7 @@ namespace SharpGLWinformsApplication1
         {
             ReadInTimeSheet();
         }
+
         private void ReadInTimeSheet()
         {
             var fileLines = File.ReadAllLines(@"IntersectionPoints1.ngc");
@@ -480,6 +472,7 @@ namespace SharpGLWinformsApplication1
 
         private void btXPosJog_Click(object sender, EventArgs e)
         {
+            
             MovePlatePos.x += 1 * StepSize*UnitFactor;
             tbXCoor.Text = Math.Round((MovePlatePos.x/ UnitFactor),4).ToString();
             UpdateCoorRv();
@@ -570,11 +563,6 @@ namespace SharpGLWinformsApplication1
         {
             UpdateCoorRv();
             MovePlatePos.z = Convert.ToSingle(tbZCoor.Text.ToString()) * UnitFactor;
-        }
-
-        private void lvGcodeDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void btθ1CoorSet_Click(object sender, EventArgs e)
@@ -698,35 +686,6 @@ namespace SharpGLWinformsApplication1
             }
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            List<vec3> list = new List<vec3>();
-            for(int i = 3; i< lvGcodeDisplay.Items.Count;i++)
-            {
-                if(lvGcodeDisplay.Items[i].SubItems[0].Text == "G1")
-                {
-                    vec3 p = new vec3(
-                        float.Parse(lvGcodeDisplay.Items[i].SubItems[1].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[1].Text.Length - 1)),
-                        float.Parse(lvGcodeDisplay.Items[i].SubItems[2].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[2].Text.Length - 1)),
-                        float.Parse(lvGcodeDisplay.Items[i].SubItems[3].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[3].Text.Length - 1)));
-                    list.Add(p);
-                }
-                
-            }
-
-
-            foreach (vec3 p in list)
-            {
-                MovePlatePos = p;
-                Thread.Sleep(3000);
-            }
-
-
-            //AutoRun au = new AutoRun(list,MovePlatePos);
-            //au.Start();
-            MessageBox.Show("Done");
-        }
-
         private void tbYCoor_TextChanged(object sender, EventArgs e)
         {
             double parsedValue;
@@ -744,6 +703,7 @@ namespace SharpGLWinformsApplication1
                 tbZCoor.Text = "0";
             }
         }
+
         public void UpdateCoorRv()
         {
             int Status;
@@ -790,7 +750,182 @@ namespace SharpGLWinformsApplication1
             }
         }
 
+
+        #region Auto Thread Test
+
+        //private Thread Thread_AutoRun;
+        private object locker = new object();
+        private CancellationTokenSource cts;
+        private int iListIndex = 0;
+
+        private List<vec3> list = new List<vec3>();
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            
+            if (iListIndex == 0)
+            {
+                for (int i = 3; i < lvGcodeDisplay.Items.Count; i++)
+                {
+                    if (lvGcodeDisplay.Items[i].SubItems[0].Text == "G1")
+                    {
+                        vec3 p = new vec3(
+                            float.Parse(lvGcodeDisplay.Items[i].SubItems[1].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[1].Text.Length - 1)),
+                            float.Parse(lvGcodeDisplay.Items[i].SubItems[2].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[2].Text.Length - 1)),
+                            float.Parse(lvGcodeDisplay.Items[i].SubItems[3].Text.Substring(1, lvGcodeDisplay.Items[i].SubItems[3].Text.Length - 1)));
+                        list.Add(p);
+                    }
+
+                }
+                cts = new CancellationTokenSource();
+                ThreadPool.QueueUserWorkItem(state => AutoMove(cts.Token));
+            }
+            else
+            {
+                cts = new CancellationTokenSource();
+                ThreadPool.QueueUserWorkItem(state => AutoMove(cts.Token));
+            }
+            
+
+            //Thread_AutoRun = new Thread(AutoMove);
+            //Thread_AutoRun.IsBackground = true;
+            //Thread_AutoRun.Start();
+
+        }
+        
+        private void AutoMove(CancellationToken token)
+        {
+            float fDistance = 0;
+            string tmp = string.Empty;
+            
+            //foreach (vec3 p in list)
+            while(iListIndex < list.Count)
+            {
+                vec3 p = list[iListIndex];
+                if (!token.IsCancellationRequested)
+                {
+                    fDistance = (p - MovePlatePos).length();
+                    PlateMove(p);
+                    iListIndex++;
+                }
+                else
+                {
+                    tmp = " ---> Cancel Moving Process!!!";
+                    MessageBox.Show(tmp);
+                    return;
+                }
+            }
+
+            if (iListIndex >= list.Count)
+            {
+                MessageBox.Show("Done" + tmp);
+                iListIndex = 0;
+                list.Clear();
+            }
+                
+        }
+
+        public void PlateMove(object states, vec3 vDestination)
+        {
+            if (JudgementWorkspace(vDestination))
+            {
+                var cts = states as CancellationTokenSource;
+                float fUnit = 0;
+                vec3 unitMove = (vDestination - MovePlatePos).normalize();
+                fUnit = unitMove.length();
+                while (!MovePlatePos.Equals(vDestination) && !cts.IsCancellationRequested)
+                {
+                    if ((MovePlatePos - vDestination).length() - fUnit > StepSize)
+                        MovePlatePos += unitMove * StepSize;
+                    else
+                    {
+                        MovePlatePos = vDestination;
+                        Thread.Sleep(1000);
+                    }
+                    Thread.Sleep(50);
+                }
+            }
+            else
+            {
+                MessageBox.Show(string.Format("the points:\r\nX:{0},Y:{1},Z:{2}\r\nis not in the workplace!!!", vDestination.x, vDestination.y, vDestination.z));
+                return;
+            }
+           
+        }
+
+        public void PlateMove(vec3 vDestination)
+        {
+            if (JudgementWorkspace(vDestination))
+            {
+                float fUnit = 0;
+                vec3 unitMove = (vDestination - MovePlatePos).normalize();
+                fUnit = unitMove.length();
+                while (!MovePlatePos.Equals(vDestination))
+                {
+                    if ((MovePlatePos - vDestination).length() - fUnit > StepSize)
+                        MovePlatePos += unitMove * StepSize;
+                    else
+                    {
+                        MovePlatePos = vDestination;
+                        Thread.Sleep(1000);
+                    }
+                    Thread.Sleep(50);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(string.Format("the points:\r\nX:{0},Y:{1},Z:{2}\r\nis not in the workplace!!!", vDestination.x,vDestination.y, vDestination.z));
+                return;
+            }
+        }
+
+
+        public bool JudgementWorkspace(vec3 p)
+        {
+            bool bResult = true;
+
+            if (p.z < -526f || p.z > -376)
+            {
+                bResult = false;
+            }
+
+            if (p.x * p.x + p.y * p.y > fWorkRadio * fWorkRadio)
+            {
+                bResult = false;
+            }
+
+            if (!bResult)
+                MessageBox.Show("The Next Position will OVER WORKSPACE");
+
+            return bResult;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            vec3 p = new vec3(0, 0, -376);
+
+            CancellationTokenSource TmpCts = new CancellationTokenSource();
+            ThreadPool.QueueUserWorkItem(state => PlateMove(TmpCts, p));
+        }
+
+        //Stop
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            cts.Cancel();
+            iListIndex = 0;
+            list.Clear();
+            PlateMove(new vec3(0, 0, -340.51800f));
+        }
+
+        //Pause
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            cts.Cancel();
+        }
+
+        #endregion
+
     }
 
-    
 }
